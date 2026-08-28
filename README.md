@@ -50,7 +50,7 @@ and the bar goes back to what it was.
 ## Install
 
 ```bash
-omarchy plugin add https://github.com/Wian47/omarchy-removable-drives.git --enable
+omarchy plugin add https://github.com/shafayetejaman/wian47.removable-drives.git --enable
 ```
 
 Needs Omarchy 4 (Quattro) and `udisks2`, both standard. It calls `lsblk`,
