@@ -493,7 +493,7 @@ Item {
       Quickshell.execDetached(["uwsm-app", "--", "xdg-open", volume.mountpoint])
       return
     }
-    Quickshell.execDetached(["bash", "-c", command + " " + quote(volume.mountpoint)])
+    Quickshell.execDetached(["bash", "-c", command + ' "$@"', "removable-drives", volume.mountpoint])
   }
 
   function openTerminal(volume) {
@@ -888,7 +888,7 @@ Item {
     if (!entry || entry.uri === "") return
     var command = String(setting("fileManager", "")).replace(/^\s+|\s+$/g, "")
     if (command !== "") {
-      Quickshell.execDetached(["bash", "-c", command + " " + quote(entry.uri)])
+      Quickshell.execDetached(["bash", "-c", command + ' "$@"', "removable-drives", entry.uri])
       return
     }
     Quickshell.execDetached(["gio", "open", entry.uri])
