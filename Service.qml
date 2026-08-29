@@ -1169,7 +1169,10 @@ Item {
   // quietly: never more than a minute stale.
   Timer {
     interval: 60000
-    running: true
+    // Backstop only while something's actually attached (the udev stream
+    // drives real changes); with nothing plugged in this would otherwise
+    // re-scan lsblk + /proc/mounts twice a minute forever.
+    running: root.devices.length > 0 || root.portables.length > 0
     repeat: true
     onTriggered: root.refresh()
   }
