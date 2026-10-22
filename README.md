@@ -12,7 +12,9 @@ and the bar goes back to what it was.
 
 - **Mount, open, and eject** any removable volume without a password — udisks2
   already lets the logged-in session do it. Ejecting unmounts every volume on
-  the drive, re-locks anything encrypted, then powers it down.
+  the drive, re-locks anything encrypted, then powers it down. Right-click the
+  bar icon to unmount a single mounted drive without opening the panel;
+  rescan from the panel's button or `r`.
 - **Knows when the drive is still being written to.** The icon turns urgent
   while the kernel has I/O in flight and the panel shows the live rate, because
   a copy dialog reaching 100% is not the moment a stick is safe to pull. An
@@ -87,7 +89,7 @@ originals are not on the device.
 
 | Where | Action |
 |---|---|
-| Bar icon | left = open · right = rescan · middle = open first mounted volume |
+| Bar icon | left = open · right = unmount the only drive if mounted, else open · middle = open first mounted volume |
 | Volume row | click = mount and open, or open if mounted · middle-click = copy its path |
 | Phone row | click = browse (mounting on demand) |
 | 󰄠 󰝰 󰄝 | mount · open · unmount that volume |

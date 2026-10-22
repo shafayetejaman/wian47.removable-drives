@@ -133,9 +133,23 @@ Panel {
     return 0
   }
 
+  function handleRightPress() {
+    var blockDevices = devices || []
+    if (blockDevices.length === 0) return
+    if (blockDevices.length === 1) {
+      if (drives.busy) {
+        toggle()
+        return
+      }
+      drives.unmountDevice(blockDevices[0])
+      return
+    }
+    toggle()
+  }
+
   function handleBarPress(buttonCode) {
     if (buttonCode === Qt.RightButton) {
-      drives.refresh()
+      handleRightPress()
     } else if (buttonCode === Qt.MiddleButton) {
       var mounted = Model.mountedVolumes(devices)
       if (mounted.length > 0) drives.openVolume(mounted[0])

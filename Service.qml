@@ -423,6 +423,28 @@ Item {
     if (volume) unmount(volume, true)
   }
 
+  // Unmount every mounted volume on a device without powering it off. Used by
+  // the bar's right-click when exactly one drive is attached with something
+  // mounted on it; paths are passed as positional args to bash, not interpolated.
+  function unmountDevice(device) {
+    if (!device || busy) return
+    _openAfterPath = ""
+    var volumes = device.volumes
+    if (!volumes || volumes.length === 0) return
+    var mounted = []
+    for (var v = 0; v < volumes.length; v++) {
+      if (volumes[v].mounted) mounted.push(volumes[v])
+    }
+    if (mounted.length === 0) return
+    var script = "set -e\n"
+    for (var i = 0; i < mounted.length; i++) {
+      script += 'udisksctl unmount --no-user-interaction -b "$' + (i + 1) + '"\n'
+    }
+    var command = ["bash", "-c", script, "removable-drives"]
+    for (var j = 0; j < mounted.length; j++) command.push(mounted[j].fsPath)
+    runAction(command, device.path, "unmount-drive", "Unmounted " + device.title)
+  }
+
   // Unlocking needs a passphrase, and a bar popup is the wrong place to
   // collect one — hand it to udisksctl in a terminal, which already knows how
   // to prompt safely, and let the udev watcher pick up the result.
@@ -1002,6 +1024,10 @@ Item {
           root.notify("Safe to remove",
                       root._successMessage.replace(/^Safe to remove /, ""),
                       Model.GLYPH_EJECT)
+        } else if (action === "unmount-drive") {
+          root.notify("Removable drives",
+                      root._successMessage,
+                      Model.GLYPH_UNMOUNT)
         }
         if (action === "check" || action === "repair") root.applyVerdict(action, path)
         if (exitCode === Model.EXIT_REMOUNT_FAILED) {

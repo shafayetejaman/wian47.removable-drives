@@ -204,6 +204,16 @@ test("picks an icon that matches the kind of drive", () => {
   assert.strictEqual(api.deviceGlyph({ name: "sdc", tran: "sata" }), api.GLYPH_DISK)
 })
 
+test("right-click unmounts only the single mounted drive", () => {
+  const mounted = api.parse(tree([disk({ children: [part({ mountpoint: "/run/media/x/A" })] })]))
+  assert.strictEqual(api.barRightClickAction(mounted), "unmount")
+  const unmounted = api.parse(tree([disk({ children: [part({})] })]))
+  assert.strictEqual(api.barRightClickAction(unmounted), "open")
+  const two = api.parse(tree([disk({ children: [part({ mountpoint: "/run/media/x/A" })] }), disk({ name: "sdc", path: "/dev/sdc", children: [part({ name: "sdc1", path: "/dev/sdc1", mountpoint: "/run/media/x/B" })] })]))
+  assert.strictEqual(api.barRightClickAction(two), "open")
+  assert.strictEqual(api.barRightClickAction([]), "open")
+})
+
 test("every glyph is a single private-use codepoint", () => {
   for (const name of names.filter(n => n.startsWith("GLYPH_"))) {
     const glyph = api[name]

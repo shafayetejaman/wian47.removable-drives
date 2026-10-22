@@ -355,6 +355,18 @@ function mountedVolumes(devices) {
   return out
 }
 
+// What a right-click on the bar icon should do. One drive with something
+// mounted on it has an obvious answer: take it offline. Any other count has
+// no single target, so the menu opens instead and the person chooses.
+function barRightClickAction(devices) {
+  if (devices.length !== 1) return "open"
+  var volumes = devices[0].volumes
+  for (var v = 0; v < volumes.length; v++) {
+    if (volumes[v].mounted) return "unmount"
+  }
+  return "open"
+}
+
 // Flat list the panel walks with j/k. Device headers are cursor targets too,
 // because ejecting is the one action that belongs to the whole device rather
 // than to any single partition on it.
